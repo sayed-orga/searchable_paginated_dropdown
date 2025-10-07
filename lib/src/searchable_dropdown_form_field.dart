@@ -7,6 +7,7 @@ class SearchableDropdownFormField<T> extends FormField<T> {
   SearchableDropdownFormField({
     required List<SearchableDropdownMenuItem<T>>? items,
     Key? key,
+    required GlobalKey<FormState> formKey,
     SearchableDropdownController<T>? controller,
     void Function(T?)? onSaved,
     String? Function(T?)? validator,
@@ -32,6 +33,7 @@ class SearchableDropdownFormField<T> extends FormField<T> {
           controller: controller,
           items: items,
           key: key,
+          formKey: formKey,
           onSaved: onSaved,
           validator: validator,
           initialValue: initialValue,
@@ -58,8 +60,7 @@ class SearchableDropdownFormField<T> extends FormField<T> {
     required Future<List<SearchableDropdownMenuItem<T>>?> Function(
       int,
       String?,
-    )?
-        paginatedRequest,
+    )? paginatedRequest,
     int? requestItemCount,
     Key? key,
     SearchableDropdownController<T>? controller,
@@ -84,9 +85,11 @@ class SearchableDropdownFormField<T> extends FormField<T> {
     bool isDialogExpanded = true,
     bool hasTrailingClearIcon = true,
     double? dialogOffset,
+    required GlobalKey<FormState> formKey,
   }) : this._(
           controller: controller,
           paginatedRequest: paginatedRequest,
+          formKey: formKey,
           key: key,
           onSaved: onSaved,
           validator: validator,
@@ -119,6 +122,7 @@ class SearchableDropdownFormField<T> extends FormField<T> {
     SearchableDropdownController<T>? controller,
     Key? key,
     void Function(T?)? onSaved,
+    required GlobalKey<FormState> formKey,
     String? Function(T?)? validator,
     SearchableDropdownMenuItem<T>? initialValue,
     AutovalidateMode? autovalidateMode,
@@ -142,6 +146,7 @@ class SearchableDropdownFormField<T> extends FormField<T> {
   }) : this._(
           controller: controller,
           futureRequest: futureRequest,
+          formKey: formKey,
           key: key,
           onSaved: onSaved,
           validator: validator,
@@ -196,8 +201,11 @@ class SearchableDropdownFormField<T> extends FormField<T> {
     this.isDialogExpanded = true,
     this.hasTrailingClearIcon = true,
     this.dialogOffset,
-  })  : assert(initialValue == null || controller == null,
-            'You can use controllers initial item value',),
+    required this.formKey,
+  })  : assert(
+          initialValue == null || controller == null,
+          'You can use controllers initial item value',
+        ),
         super(
           builder: (FormFieldState<T> state) {
             return Padding(
@@ -208,6 +216,7 @@ class SearchableDropdownFormField<T> extends FormField<T> {
                   if (items != null)
                     SearchableDropdown<T>(
                       controller: controller,
+                      formKey: formKey,
                       key: key,
                       backgroundDecoration: backgroundDecoration,
                       hintText: hintText,
@@ -234,6 +243,7 @@ class SearchableDropdownFormField<T> extends FormField<T> {
                       controller: controller,
                       paginatedRequest: paginatedRequest,
                       requestItemCount: requestItemCount,
+                      formKey: formKey,
                       key: key,
                       backgroundDecoration: backgroundDecoration,
                       hintText: hintText,
@@ -257,6 +267,7 @@ class SearchableDropdownFormField<T> extends FormField<T> {
                     ),
                   if (futureRequest != null)
                     SearchableDropdown<T>.future(
+                      formKey: formKey,
                       controller: controller,
                       futureRequest: futureRequest,
                       key: key,
@@ -316,6 +327,7 @@ class SearchableDropdownFormField<T> extends FormField<T> {
 
   /// Dropdowns margin padding with other widgets.
   final EdgeInsetsGeometry? margin;
+  final GlobalKey<FormState> formKey;
 
   /// Future service which is returns DropdownMenuItem list.
   final Future<List<SearchableDropdownMenuItem<T>>?> Function()? futureRequest;
